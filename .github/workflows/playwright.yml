@@ -16,29 +16,33 @@ on:
         default: '@smoke'
         required: true
         type: string
-      
       browser:
         description: 'Browser: '
         required: true
         default: 'chromium'
         type: choice
         options:
+          - 'chromium'
           - 'firefox'
           - 'webkit'
 
   pull_request:
     branches: [ main, develop ]
+
 jobs:
   print-tag:
     runs-on: ubuntu-latest
-    if: ${{ inputs.print_tags }} 
+    if: ${{ github.event_name == 'workflow_dispatch' }}
     steps:
-      - name: Print the input tag to STDOUT
-        run: echo  The tags are ${{ inputs.tags }} 
-        
+      - name: Print the inputs to STDOUT
+        run: echo "The tags are ${{ inputs.tags }} on ${{ inputs.environment }} / ${{ inputs.browser }}"
+
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    env:
+      GREP: ${{ inputs.tags || '@smoke' }}
+      PROJECT: ${{ inputs.browser || 'chromium' }}
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
@@ -49,7 +53,7 @@ jobs:
     - name: Install Playwright Browsers
       run: pnpm exec playwright install --with-deps
     - name: Run Playwright tests
-      run: pnpm bddgen && pnpm playwright test ${{ inputs.tags }} 
+      run: pnpm bddgen && pnpm exec playwright test --grep "$GREP" --project="$PROJECT"
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
