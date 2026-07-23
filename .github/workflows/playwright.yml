@@ -16,6 +16,15 @@ on:
         default: '@smoke'
         required: true
         type: string
+      
+      browser:
+        description: 'Browser: '
+        required: true
+        default: 'chromium'
+        type: choice
+        options:
+          - 'firefox'
+          - 'webkit'
 
   pull_request:
     branches: [ main, develop ]
