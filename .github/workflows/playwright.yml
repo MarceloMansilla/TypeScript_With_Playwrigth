@@ -42,7 +42,7 @@ jobs:
     - name: Install Playwright Browsers
       run: pnpm exec playwright install --with-deps
     - name: Run Playwright tests
-      run: pnpm bddgen && pnpm playwright test --grep ${{ inputs.tags }} 
+      run: pnpm bddgen && pnpm playwright test ${{ inputs.tags }} 
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
