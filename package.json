@@ -1,0 +1,24 @@
+{
+  "name": "typescript_with_playwrigth",
+  "version": "1.0.0",
+  "description": "demo framework Typescript with Playwright",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MarceloMansilla/TypeScript_With_Playwrigth.git"
+  },
+  "author": "Marcelo Mansilla",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MarceloMansilla/TypeScript_With_Playwrigth/issues"
+  },
+  "homepage": "https://github.com/MarceloMansilla/TypeScript_With_Playwrigth#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@types/node": "^26.1.1",
+    "playwright-bdd": "^8.5.1",
+    "typescript": "^5.9.3"
+  }
+}
