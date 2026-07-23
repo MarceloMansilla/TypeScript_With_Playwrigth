@@ -8,6 +8,18 @@
 
     "moduleResolution": "NodeNext",
     "esModuleInterop": true,
+    "verbatimModuleSyntax": true,
+    "ignoreDeprecations": "6.0",
+
+    // Path aliases
+    "baseUrl": ".",
+    "paths": {
+      "@pages/*": ["src/pages/*"],
+      "@behaviour/*": ["src/behaviour/*"],
+      "@model/*": ["src/model/*"],
+      "@steps/*": ["src/steps/*"],
+      "@tests/*": ["src/tests/*"]
+    },
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
@@ -42,10 +54,13 @@
     // Recommended Options
     "strict": true,
     "jsx": "react-jsx",
-    "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-  }
+  },
+  "include": [
+    "src/**/*.ts",
+    "playwright.config.ts"
+  ]
 }
