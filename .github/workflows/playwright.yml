@@ -30,13 +30,6 @@ on:
     branches: [ main, develop ]
 
 jobs:
-  print-tag:
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_dispatch' }}
-    steps:
-      - name: Print the inputs to STDOUT
-        run: echo "The tags are ${{ inputs.tags }} on ${{ inputs.environment }} / ${{ inputs.browser }}"
-
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
