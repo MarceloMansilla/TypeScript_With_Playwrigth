@@ -4,7 +4,11 @@
   "description": "demo framework Typescript with Playwright",
   "main": "index.js",
   "type": "module",
-  "scripts": {},
+  "scripts": {
+    "test:smoke": "pnpm bddgen && pnpm playwright test --grep @smoke",
+    "test:regression": "pnpm bddgen && pnpm playwright test --grep @regression",
+    "generate:report":"pnpm exec playwright show-report"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MarceloMansilla/TypeScript_With_Playwrigth.git"
@@ -18,7 +22,7 @@
   "devDependencies": {
     "@playwright/test": "^1.61.1",
     "@types/node": "^26.1.1",
-    "playwright-bdd": "^8.5.1",
+    "playwright-bdd": "^9.2.0",
     "typescript": "^5.9.3"
   }
 }
