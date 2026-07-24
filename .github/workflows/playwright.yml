@@ -22,6 +22,7 @@ on:
         default: '@smoke'
         required: true
         type: string
+
       browser:
         description: 'Browser: '
         required: true
@@ -82,7 +83,7 @@ jobs:
             MATRIX="${MATRIX//$'\n'/'%0A'}"
             MATRIX="${MATRIX//$'\r'/'%0D'}"
           else
-            MATRIX='[{"type": "${{ inputs.type }}", "environment": "${{ inputs.environment }}", "browser" : "${{ inputs.browser }}", "tags": "${{ inputs.execute_tags }}"}]'
+            MATRIX='[{"type": "${{ inputs.type }}", "environment": "${{ inputs.environment }}", "browser" : "${{ inputs.browser }}", "tags": "${{ inputs.tags }}"}]'
           fi
           echo "::notice title=Execution matrix::${MATRIX}"
           echo "matrix=${MATRIX}" >> $GITHUB_OUTPUT
@@ -117,7 +118,7 @@ jobs:
       env:
           USER_NAME: ${{ secrets.USER_NAME }}
           USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
-          ENVIRONMENT: ${{ matrix.executions.environment == 'develop' && '' || matrix.executions.environment }}
+          ENVIRONMENT: ${{ matrix.executions.environment }}
       run: pnpm bddgen && pnpm playwright test --grep ${{ matrix.executions.tags }}  --project=${{ matrix.executions.browser }}
 
     - uses: actions/upload-artifact@v7
