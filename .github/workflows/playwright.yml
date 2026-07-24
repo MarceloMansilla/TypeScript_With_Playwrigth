@@ -31,6 +31,15 @@ on:
           - 'chromium'
           - 'firefox'
           - 'webkit'
+        
+      type: 
+        description: 'Type: '
+        required: true
+        default: 'smoke'
+        type: choice
+        options:
+          - 'regression'
+
   schedule:
       # Regression
     - cron: "00 18 * * *"
@@ -73,7 +82,7 @@ jobs:
             MATRIX="${MATRIX//$'\n'/'%0A'}"
             MATRIX="${MATRIX//$'\r'/'%0D'}"
           else
-            MATRIX='[{"type": "${{ inputs.type }}", "environment": "${{ inputs.environment }}", "browser":"${{ inputs.browser }}" "tags": "${{ inputs.execute_tags }}"}]'
+            MATRIX='[{"type": "${{ inputs.type }}", "environment": "${{ inputs.environment }}", "browser" : "${{ inputs.browser }}", "tags": "${{ inputs.execute_tags }}"}]'
           fi
           echo "::notice title=Execution matrix::${MATRIX}"
           echo "matrix=${MATRIX}" >> $GITHUB_OUTPUT
