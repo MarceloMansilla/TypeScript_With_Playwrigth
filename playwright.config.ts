@@ -20,9 +20,10 @@ dotenv.config({
 /**
  * Build the base URL from the ENVIRONMENT variable.
  * ENVIRONMENT=staging -> https://stagingrahulshettyacademy.com
- * ENVIRONMENT unset/empty -> https://rahulshettyacademy.com (develop)
+ * ENVIRONMENT unset/empty/"pre" -> https://rahulshettyacademy.com
  */
-const environment = process.env.ENVIRONMENT ?? '';
+const rawEnvironment = process.env.ENVIRONMENT ?? '';
+const environment = rawEnvironment === 'pre' ? '' : rawEnvironment;
 const baseURL = environment
   ? `https://${environment}rahulshettyacademy.com`
   : 'https://rahulshettyacademy.com';

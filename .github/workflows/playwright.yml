@@ -10,10 +10,10 @@ on:
       environment:
         description: 'Environment: '
         required: true
-        default: 'develop'
+        default: 'staging'
         type: choice
         options:
-          - 'develop'
+          - 'pre'
           - 'staging'
           - 'qa'
           - 'production'
@@ -77,7 +77,7 @@ jobs:
               ;;
             esac
           
-            python .github/workflows/utils/create_strategy_array.py
+            python .github/utils/create_strategy_array.py
             MATRIX=$(cat regression.json)
             MATRIX="${MATRIX//'%'/'%25'}"
             MATRIX="${MATRIX//$'\n'/'%0A'}"
@@ -98,9 +98,6 @@ jobs:
 
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    env:
-      GREP: ${{ inputs.tags || '@smoke' }}
-      PROJECT: ${{ inputs.browser || 'chromium' }}
     steps:
 
     - uses: actions/checkout@v6
@@ -119,7 +116,7 @@ jobs:
           USER_NAME: ${{ secrets.USER_NAME }}
           USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
           ENVIRONMENT: ${{ matrix.executions.environment }}
-      run: pnpm bddgen && pnpm playwright test --grep ${{ matrix.executions.tags }}  --project=${{ matrix.executions.browser }}
+      run: pnpm bddgen && pnpm playwright test --grep "${{ matrix.executions.tags }}" --project=${{ matrix.executions.browser }}
 
     - uses: actions/upload-artifact@v7
 
