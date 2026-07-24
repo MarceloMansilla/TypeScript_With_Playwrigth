@@ -42,7 +42,7 @@ jobs:
     - name: Install Playwright Browsers
       run: pnpm exec playwright install --with-deps
     - name: Run Playwright tests
-      run: USER_NAME="${{ secrets.USER_NAME}}" USER_PASSWORD="${{ secrets.USER_PASSWORD}}" pnpm playwright test ${{ inputs.tags }} 
+      run: USER_NAME="${{ secrets.USER_NAME}}" USER_PASSWORD="${{ secrets.USER_PASSWORD}}"  pnpm bddgen && pnpm playwright test ${{ inputs.tags }} 
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
