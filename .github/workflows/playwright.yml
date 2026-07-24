@@ -10,6 +10,7 @@ on:
         options:
           - 'develop'
           - 'staging'
+          - 'qa'
           - 'production'
       tags:
         description: 'Test scenario tags: @tag_name'
@@ -54,6 +55,7 @@ jobs:
       env:
           USER_NAME: ${{ secrets.USER_NAME }}
           USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
+          ENVIRONMENT: ${{ inputs.environment == 'develop' && '' || inputs.environment }}
       run: pnpm bddgen && pnpm playwright test --grep ${{ inputs.tags }}  --project=${{ inputs.browser }}
 
     - uses: actions/upload-artifact@v7
