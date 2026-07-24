@@ -16,22 +16,27 @@ on:
         default: '@smoke'
         required: true
         type: string
-      
       browser:
         description: 'Browser: '
         required: true
         default: 'chromium'
         type: choice
         options:
+          - 'chromium'
           - 'firefox'
           - 'webkit'
 
   pull_request:
     branches: [ main, develop ]
+
 jobs:       
+
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    env:
+      GREP: ${{ inputs.tags || '@smoke' }}
+      PROJECT: ${{ inputs.browser || 'chromium' }}
     steps:
 
     - uses: actions/checkout@v6
@@ -52,6 +57,7 @@ jobs:
       run: pnpm bddgen && pnpm playwright test --grep ${{ inputs.tags }}  --project=${{ inputs.browser }}
 
     - uses: actions/upload-artifact@v7
+
       if: ${{ !cancelled() }}
       with:
         name: playwright-report
