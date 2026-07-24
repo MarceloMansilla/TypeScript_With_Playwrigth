@@ -33,20 +33,25 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
+
+    - uses: actions/checkout@v6
+
+    - uses: actions/setup-node@v7
       with:
         node-version: lts/*
     - name: Install dependencies
       run: npm install -g pnpm && pnpm install
+
     - name: Install Playwright Browsers
       run: pnpm exec playwright install --with-deps
+
     - name: Run Playwright tests
       env:
           USER_NAME: ${{ secrets.USER_NAME }}
           USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
       run: pnpm bddgen && pnpm playwright test --grep ${{ inputs.tags }}
-    - uses: actions/upload-artifact@v4
+
+    - uses: actions/upload-artifact@v7
       if: ${{ !cancelled() }}
       with:
         name: playwright-report
