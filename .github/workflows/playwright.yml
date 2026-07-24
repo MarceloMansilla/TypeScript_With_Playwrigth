@@ -43,40 +43,40 @@ on:
 
 jobs:
 
-create-matrix:
-  name: Create Matrix
-  runs-on: [self-hosted]
-  outputs:
-    infoExecution: ${{ steps.matrix.outputs.matrix }}
-  
-  steps:
-    - name: Checkout Project
-      uses: actions/checkout@v4.1.1
+  create-matrix:
+    name: Create Matrix
+    runs-on: [self-hosted]
+    outputs:
+      infoExecution: ${{ steps.matrix.outputs.matrix }}
+    
+    steps:
+      
+      - uses: actions/checkout@v6
 
-    - name: Create Matrix
-      id: matrix
-      run: |
-        if [[ "${{ github.event_name }}" == "schedule" ]]; then
-        
-          case '${{ github.event.schedule }}' in
-          "00 18 * * *")
-            echo '${{ vars.REGRESSION }}' > regression.json
-            ;;
-          "* * * * 1-5")
-            echo '${{ vars.SMOKE }}' > regression.json
-            ;;
-          esac
-        
-          python .github/workflows/utils/create_strategy_array.py
-          MATRIX=$(cat regression.json)
-          MATRIX="${MATRIX//'%'/'%25'}"
-          MATRIX="${MATRIX//$'\n'/'%0A'}"
-          MATRIX="${MATRIX//$'\r'/'%0D'}"
-        else
-          MATRIX='[{"type": "${{ inputs.type }}", "environment": "${{ inputs.environment }}", "browser":"${{ inputs.browser }}" "tags": "${{ inputs.execute_tags }}"}]'
-        fi
-        echo "::notice title=Execution matrix::${MATRIX}"
-        echo "matrix=${MATRIX}" >> $GITHUB_OUTPUT
+      - name: Create Matrix
+        id: matrix
+        run: |
+          if [[ "${{ github.event_name }}" == "schedule" ]]; then
+          
+            case '${{ github.event.schedule }}' in
+            "00 18 * * *")
+              echo '${{ vars.REGRESSION }}' > regression.json
+              ;;
+            "* * * * 1-5")
+              echo '${{ vars.SMOKE }}' > regression.json
+              ;;
+            esac
+          
+            python .github/workflows/utils/create_strategy_array.py
+            MATRIX=$(cat regression.json)
+            MATRIX="${MATRIX//'%'/'%25'}"
+            MATRIX="${MATRIX//$'\n'/'%0A'}"
+            MATRIX="${MATRIX//$'\r'/'%0D'}"
+          else
+            MATRIX='[{"type": "${{ inputs.type }}", "environment": "${{ inputs.environment }}", "browser":"${{ inputs.browser }}" "tags": "${{ inputs.execute_tags }}"}]'
+          fi
+          echo "::notice title=Execution matrix::${MATRIX}"
+          echo "matrix=${MATRIX}" >> $GITHUB_OUTPUT
 
   test:
     needs: create-matrix
