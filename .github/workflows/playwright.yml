@@ -1,4 +1,9 @@
 name: Playwright Tests
+run-name: "Test - ${{ 
+          (github.event.schedule == '00 18 * * *' && 'Regresion Automatic' ) || 
+          (github.event.schedule == '0 4 * * 1-5' && 'Smoke Automatic' ) || 
+          format('Manual de tipo: {0}',inputs.type) 
+          }}"
 on:
   workflow_dispatch:
     inputs:
@@ -10,6 +15,7 @@ on:
         options:
           - 'develop'
           - 'staging'
+          - 'qa'
           - 'production'
       tags:
         description: 'Test scenario tags: @tag_name'
@@ -25,13 +31,61 @@ on:
           - 'chromium'
           - 'firefox'
           - 'webkit'
+  schedule:
+      # Regression
+    - cron: "00 18 * * *"
+      # Smoke
+    #- cron: "0 4 * * 1-5"
+    - cron: "* * * * 1-5"
 
   pull_request:
     branches: [ main, develop ]
 
-jobs:       
+jobs:
+
+create-matrix:
+  name: Create Matrix
+  runs-on: [self-hosted]
+  outputs:
+    infoExecution: ${{ steps.matrix.outputs.matrix }}
+  
+  steps:
+    - name: Checkout Project
+      uses: actions/checkout@v4.1.1
+
+    - name: Create Matrix
+      id: matrix
+      run: |
+        if [[ "${{ github.event_name }}" == "schedule" ]]; then
+        
+          case '${{ github.event.schedule }}' in
+          "00 18 * * *")
+            echo '${{ vars.REGRESSION }}' > regression.json
+            ;;
+          "* * * * 1-5")
+            echo '${{ vars.SMOKE }}' > regression.json
+            ;;
+          esac
+        
+          python .github/workflows/utils/create_strategy_array.py
+          MATRIX=$(cat regression.json)
+          MATRIX="${MATRIX//'%'/'%25'}"
+          MATRIX="${MATRIX//$'\n'/'%0A'}"
+          MATRIX="${MATRIX//$'\r'/'%0D'}"
+        else
+          MATRIX='[{"type": "${{ inputs.type }}", "environment": "${{ inputs.environment }}", "browser":"${{ inputs.browser }}" "tags": "${{ inputs.execute_tags }}"}]'
+        fi
+        echo "::notice title=Execution matrix::${MATRIX}"
+        echo "matrix=${MATRIX}" >> $GITHUB_OUTPUT
 
   test:
+    needs: create-matrix
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        executions: ${{ fromJson(needs.create-matrix.outputs.infoExecution) }}
+
     timeout-minutes: 60
     runs-on: ubuntu-latest
     env:
@@ -54,7 +108,8 @@ jobs:
       env:
           USER_NAME: ${{ secrets.USER_NAME }}
           USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
-      run: pnpm bddgen && pnpm playwright test --grep ${{ inputs.tags }}  --project=${{ inputs.browser }}
+          ENVIRONMENT: ${{ matrix.executions.environment == 'develop' && '' || matrix.executions.environment }}
+      run: pnpm bddgen && pnpm playwright test --grep ${{ matrix.executions.tags }}  --project=${{ matrix.executions.browser }}
 
     - uses: actions/upload-artifact@v7
 

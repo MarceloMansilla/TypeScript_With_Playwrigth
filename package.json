@@ -9,7 +9,7 @@
     "test:smoke": "pnpm bddgen && pnpm playwright test --grep @smoke",
     "test:regression": "pnpm bddgen && pnpm playwright test --grep @regression",
     "generate:report": "pnpm exec playwright show-report",
-    "debug":"pnpm bddgen && pnpm exec playwright test --debug"
+    "debug": "pnpm bddgen && pnpm exec playwright test --debug"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
     "@playwright/test": "^1.61.1",
     "@types/node": "^26.1.1",
     "dotenv": "^17.4.2",
+    "eslint": "^10.7.0",
     "playwright-bdd": "^9.2.0",
     "typescript": "^5.9.3"
   }

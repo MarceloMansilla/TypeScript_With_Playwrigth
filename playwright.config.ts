@@ -17,6 +17,16 @@ dotenv.config({
   path: fs.existsSync(envLocalPath) ? envLocalPath : path.resolve(__dirname, '.env'),
 });
 
+/**
+ * Build the base URL from the ENVIRONMENT variable.
+ * ENVIRONMENT=staging -> https://stagingrahulshettyacademy.com
+ * ENVIRONMENT unset/empty -> https://rahulshettyacademy.com (develop)
+ */
+const environment = process.env.ENVIRONMENT ?? '';
+const baseURL = environment
+  ? `https://${environment}rahulshettyacademy.com`
+  : 'https://rahulshettyacademy.com';
+
 const testDir = defineBddConfig({
   features: 'src/features/**/*.feature',
   steps: 'src/steps/**/*.ts',
@@ -41,7 +51,7 @@ export default defineConfig({
   use: {
     headless: true,
     /* Base URL to use in actions like `await page.goto('')`. */
-    baseURL: 'https://rahulshettyacademy.com',
+    baseURL,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
