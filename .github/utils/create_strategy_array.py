@@ -10,16 +10,19 @@ for scenario in json_data["scenarios"]:
     browsers = scenario.get("browsers", [])
     execute_tags = scenario.get("execute_tags", [])
     exclude_tags = scenario.get("exclude_tags", [])
-    tags = ''
 
-    if execute_tags or exclude_tags:
-        tags = '@ '
-    
+    # Build a single --grep regex: lookaheads require each execute_tag to be
+    # present, negative lookaheads require each exclude_tag to be absent.
+    tags = (
+        "".join(f"(?=.*@{tag})" for tag in execute_tags)
+        + "".join(f"(?!.*@{tag})" for tag in exclude_tags)
+    )
+
     unique_records.extend([
         {
             **copy.deepcopy(scenario),
             "browser": browser,
-            "tags": tags + " --tags ".join([f"@{tag}" for tag in execute_tags] + [f"~@{tag}" for tag in exclude_tags])
+            "tags": tags
         }
         for browser in browsers or [""]
     ])
