@@ -49,7 +49,7 @@ jobs:
       env:
           USER_NAME: ${{ secrets.USER_NAME }}
           USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
-      run: pnpm bddgen && pnpm playwright test --grep ${{ inputs.tags }}
+      run: pnpm bddgen && pnpm playwright test --grep ${{ inputs.tags }}  --project=${{ inputs.browser }}
 
     - uses: actions/upload-artifact@v7
       if: ${{ !cancelled() }}
