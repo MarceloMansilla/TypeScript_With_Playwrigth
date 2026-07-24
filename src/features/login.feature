@@ -5,7 +5,7 @@ Feature: Login
 
   @login @smoke
   Scenario: Login with valid credentials
-    When the user enters email "batmantest@gmail.com" and enters password "Bat@123456"
+    When the user enters valid email and enters valid password
     And the user clicks the sign in button
     Then the user should see the homepage
 

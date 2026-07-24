@@ -29,7 +29,8 @@ on:
   pull_request:
     branches: [ main, develop ]
 
-jobs:
+jobs:       
+
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
@@ -37,17 +38,26 @@ jobs:
       GREP: ${{ inputs.tags || '@smoke' }}
       PROJECT: ${{ inputs.browser || 'chromium' }}
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
+
+    - uses: actions/checkout@v6
+
+    - uses: actions/setup-node@v7
       with:
         node-version: lts/*
     - name: Install dependencies
       run: npm install -g pnpm && pnpm install
+
     - name: Install Playwright Browsers
       run: pnpm exec playwright install --with-deps
+
     - name: Run Playwright tests
-      run: pnpm bddgen && pnpm exec playwright test --grep "$GREP" --project="$PROJECT"
-    - uses: actions/upload-artifact@v4
+      env:
+          USER_NAME: ${{ secrets.USER_NAME }}
+          USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
+      run: pnpm bddgen && pnpm playwright test --grep ${{ inputs.tags }}  --project=${{ inputs.browser }}
+
+    - uses: actions/upload-artifact@v7
+
       if: ${{ !cancelled() }}
       with:
         name: playwright-report
