@@ -7,29 +7,25 @@ with open("regression.json", "r") as calendar:
 unique_records = []
 
 for scenario in json_data["scenarios"]:
-    countries = scenario.get("countries", [])
-    tenants = scenario.get("tenants", [])
+    browsers = scenario.get("browsers", [])
     execute_tags = scenario.get("execute_tags", [])
     exclude_tags = scenario.get("exclude_tags", [])
     tags = ''
 
     if execute_tags or exclude_tags:
-        tags = '--tags '
+        tags = '@ '
     
     unique_records.extend([
         {
             **copy.deepcopy(scenario),
-            "country": country,
-            "tenant": tenant,
+            "browser": browser,
             "tags": tags + " --tags ".join([f"@{tag}" for tag in execute_tags] + [f"~@{tag}" for tag in exclude_tags])
         }
-        for country in countries or [""]
-        for tenant in tenants or [""]
+        for browser in browsers or [""]
     ])
 
     for record in unique_records:
-        record.pop("countries", None)
-        record.pop("tenants", None)
+        record.pop("browsers", None)
         record.pop("execute_tags", None)
         record.pop("exclude_tags", None)
 
