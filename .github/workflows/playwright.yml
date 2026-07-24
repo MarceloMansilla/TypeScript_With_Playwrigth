@@ -50,8 +50,8 @@ jobs:
       infoExecution: ${{ steps.matrix.outputs.matrix }}
     
     steps:
-      - name: Checkout Project
-        uses: actions/checkout@v4.1.1
+      
+      - uses: actions/checkout@v6
 
       - name: Create Matrix
         id: matrix
