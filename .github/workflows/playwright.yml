@@ -45,7 +45,7 @@ jobs:
 
   create-matrix:
     name: Create Matrix
-    runs-on: [self-hosted]
+    runs-on: ubuntu-latest
     outputs:
       infoExecution: ${{ steps.matrix.outputs.matrix }}
     
