@@ -8,3 +8,6 @@ node_modules/
 /playwright/.auth/
 
 .features-gen/*
+
+.env.local
+.env

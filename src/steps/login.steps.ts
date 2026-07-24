@@ -12,6 +12,14 @@ var login_behaviour: LoginBehaviour;
 Given("the user navigates to the login page", async ({ page }) => {
     await page.goto('/client/#/auth/login');
 });
+
+When("the user enters valid email and enters valid password", async ({ page }) => {
+    login_model = new LoginModel(process.env.USER_NAME!, process.env.USER_PASSWORD!)
+    login_page = new LoginPage(page)
+    login_behaviour = new LoginBehaviour(login_model, login_page)
+    await login_behaviour.fillEmailAndPassword()
+});
+
 When("the user enters email {string} and enters password {string}", async ({ page }, email: string, password: string) => {
     login_model = new LoginModel(email, password)
     login_page = new LoginPage(page)

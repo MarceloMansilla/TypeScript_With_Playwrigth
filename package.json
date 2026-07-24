@@ -5,9 +5,11 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "test": "pnpm bddgen && pnpm playwright test --grep",
     "test:smoke": "pnpm bddgen && pnpm playwright test --grep @smoke",
     "test:regression": "pnpm bddgen && pnpm playwright test --grep @regression",
-    "generate:report":"pnpm exec playwright show-report"
+    "generate:report": "pnpm exec playwright show-report",
+    "debug":"pnpm bddgen && pnpm exec playwright test --debug"
   },
   "repository": {
     "type": "git",
@@ -22,6 +24,7 @@
   "devDependencies": {
     "@playwright/test": "^1.61.1",
     "@types/node": "^26.1.1",
+    "dotenv": "^17.4.2",
     "playwright-bdd": "^9.2.0",
     "typescript": "^5.9.3"
   }
