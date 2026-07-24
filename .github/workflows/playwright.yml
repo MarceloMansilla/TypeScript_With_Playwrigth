@@ -33,12 +33,14 @@ on:
           - 'webkit'
             environment:
         
-        type: 'Type: '
+      type: 
+        description: 'Type: '
         required: true
         default: 'smoke'
         type: choice
         options:
           - 'regression'
+
   schedule:
       # Regression
     - cron: "00 18 * * *"
