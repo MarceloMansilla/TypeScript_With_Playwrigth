@@ -35,7 +35,8 @@ on:
       # Regression
     - cron: "00 18 * * *"
       # Smoke
-    - cron: "0 4 * * 1-5"
+    #- cron: "0 4 * * 1-5"
+    - cron: "* * * * 1-5"
 
   pull_request:
     branches: [ main, develop ]
@@ -61,7 +62,7 @@ create-matrix:
           "00 18 * * *")
             echo '${{ vars.REGRESSION }}' > regression.json
             ;;
-          "0 4 * * 1-5")
+          "* * * * 1-5")
             echo '${{ vars.SMOKE }}' > regression.json
             ;;
           esac
